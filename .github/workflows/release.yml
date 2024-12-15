@@ -4,6 +4,9 @@ on:
     tags:
       - "*"
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Generate changelog
@@ -22,6 +25,8 @@ jobs:
         env:
           OUTPUT: CHANGES.md
           GITHUB_REPO: ${{ github.repository }}
+      - name: Publish (dry-run)
+        run: cargo publish -p lib --dry-run
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
