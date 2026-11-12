@@ -1,3 +1,19 @@
 [workspace]
-resolver = "2"
+resolver = "3"
 members = ["crates/app", "crates/lib"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99.1"
+license = "MIT"
+authors = ["startracex"]
+
+[workspace.dependencies]
+lib = { path = "crates/lib" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
