@@ -1,3 +1,10 @@
+/// Adds two numbers.
+///
+/// # Examples
+///
+/// ```
+/// assert_eq!(lib::add(2, 2), 4);
+/// ```
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }
