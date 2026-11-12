@@ -1,23 +1,31 @@
 name: Release
+
 on:
   push:
     tags:
-      - "*"
+      - "v*"
 
 permissions:
   contents: write
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   release:
-    name: Generate changelog
+    name: Publish release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.99.1
+      - name: Cache
+        uses: Swatinem/rust-cache@v2.9.3
       - name: Generate changelog
-        uses: orhun/git-cliff-action@v4
+        uses: orhun/git-cliff-action@v4.9.1
         id: git-cliff
         with:
           config: cliff.toml
@@ -26,15 +34,12 @@ jobs:
           OUTPUT: CHANGES.md
           GITHUB_REPO: ${{ github.repository }}
       - name: Publish (dry-run)
-        run: cargo publish -p lib --dry-run
+        run: cargo publish -p lib --dry-run --locked
       - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: ${{ steps.git-cliff.outputs.content }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: CHANGES.md
           draft: false
           prerelease: false
