@@ -26,7 +26,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Install mdBook
-        uses: taiki-e/install-action@v2.90.3
+        uses: taiki-e/install-action@v2.90.5
         with:
           tool: mdbook@0.5.4
       - name: Build book
